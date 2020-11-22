@@ -35,6 +35,10 @@ async function getVideoSources(){
     videoOptionsMenu.popup();
 }
 
+let mediaRecorder; // MediaRecoder Instance to capture screen activity
+const recordedChunks = [];
+// Array to store video chunks, which would allow recording screen activity in multiple segments
+
 // Change window of the videoSource for recording
 async function selectSource(source){
     // Set the label of the videoSelectBtn to the name of the source
@@ -60,4 +64,3 @@ async function selectSource(source){
     // Preview the source in the HTML Video Element, by assigning the video element to the stream
     videoElement.srcObject = stream;
     videoElement.play();// Will give a realtime feed of the window
-}
