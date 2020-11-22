@@ -1,4 +1,6 @@
+// Every Electron app has 1 main process, which is created by this index.js file
 const { app, BrowserWindow } = require('electron');
+// app - Uses event based API to control the lifecycles of the app
 const path = require('path');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -6,11 +8,16 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
   app.quit();
 }
 
+// An Electron app has one main process, but it may have multiple Render processes running in 
+// A render process is an instance of Chromium, quite like a window or tab in the browser
 const createWindow = () => {
-  // Create the browser window.
+  // Create a render process by instantiatig the BrowserWindow.
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    webPreferences:{
+      nodeIntegration: true //Allows to access NodeJS Globals directly, in the Front end code
+    }
   });
 
   // and load the index.html of the app.
@@ -23,13 +30,17 @@ const createWindow = () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
+// This event will fire once, when the app is ready | Any initialization logic may be run here
 app.on('ready', createWindow);
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
+// As Macs behave in a different way, platform specific code may be implemented here by-
+//- checking/identifying the platform/OS 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+  // process.platform -> special value provided by Electron
+  if (process.platform !== 'darwin') { // darwin - Mac | Win32 - Windows
     app.quit();
   }
 });
