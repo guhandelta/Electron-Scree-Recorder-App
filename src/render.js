@@ -97,3 +97,36 @@ async function selectSource(source){
     mediaRecorder.onstop = handleStop;
 }
 
+// Fn to capture all the recorded chunks and pushes those into recordedChunks[]
+function handleAvailableData(e){
+    console.log('video data available');
+    recordedChunks.push(e.data);
+}
+
+// fn() to save the video file on stop
+async function handleStop(e){
+    // The Blob object represents a blob, which is a file-like object of immutable, raw data; they can be-
+    //- read as text or binary data, or converted into a ReadableStream so its methods can be used for-
+    //- processing the data.
+    const videoBlob = new Blob(recordedChunks, {
+        type: 'video/webm; codecs=vp9'
+    });
+
+    // Getting the data back in a proper format, to be played back as a video
+    const buffer = Buffer.from(await videoBlob.arrayBuffer());
+    // The Blob object represents a blob, which is a file-like object of immutable, raw data; they can-
+    //- be read as text or binary data, or converted into a ReadableStream so its methods can be used-
+    //- for processing the data.
+
+    const { filePath } = await dialog.showSaveDialog({// this fn() will resolve to the filepath that the-
+        //- user just selected
+        buttonLabel: 'Save video',
+        defaultPath: `vid-${Date.now()}.webm` // DefaultPath that timestamps the video
+    });
+
+    if (filePath) {
+        writeFile(filePath, buffer, () => console.log('video saved successfully!'));
+    }
+    // buffer -> Arg for raw data
+    // This is a callback based API, so pass in a callback() to console log a success msg
+}
