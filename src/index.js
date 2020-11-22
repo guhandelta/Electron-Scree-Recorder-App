@@ -16,7 +16,8 @@ const createWindow = () => {
     width: 800,
     height: 600,
     webPreferences:{
-      nodeIntegration: true //Allows to access NodeJS Globals directly, in the Front end code
+      nodeIntegration: true, //Allows to access NodeJS Globals directly, in the Front end code
+      enableRemoteModule: true
     }
   });
 
